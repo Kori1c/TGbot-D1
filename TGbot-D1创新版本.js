@@ -701,14 +701,14 @@ async function dbConfigGet(key, env) {
       if (isCorrect) {
           await telegramApi(env.BOT_TOKEN, "sendMessage", {
               chat_id: chatId,
-              text: "✅ 验证通过！您现在可以发送消息了。",
+              text: "🎉 耶！验证成功啦！可以开始聊天咯！",
           });
           // 更新 D1 中的用户状态
           await dbUserUpdate(chatId, { user_state: "verified" }, env);
       } else {
           await telegramApi(env.BOT_TOKEN, "sendMessage", {
               chat_id: chatId,
-              text: "❌ 验证失败！\n请查看机器人简介查找答案，然后重新回答。",
+              text: "🥺 抱歉哦，这次没有猜对呢！ 嘘！🤫 如果简介没有答案，那就在主人的心里哦，快去找主人要答案吧！",
           });
       }
   }
