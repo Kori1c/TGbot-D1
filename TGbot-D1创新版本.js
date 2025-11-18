@@ -220,32 +220,38 @@ async function dbConfigGet(key, env) {
   
     const timestamp = initialTimestamp ? new Date(initialTimestamp * 1000).toLocaleString('zh-CN') : new Date().toLocaleString('zh-CN');
     
+    // --- [ ⭐️ 已还原 ⭐️ ] ---
+    // 还原为原始代码，不再尝试将文本设为链接
     const infoCard = `
   <b>👤 用户资料卡</b>
-  ---
-  • 昵称/名称: <code>${safeName}</code>
   • 用户名: <code>${safeUsername}</code>
   • ID: <code>${safeUserId}</code>
-  • 首次连接时间: <code>${timestamp}</code>
     `.trim();
+    // --- [ ⭐️ 还原结束 ⭐️ ] ---
   
     return { userId, name: rawName, username: rawUsername, topicName, infoCard };
   }
   
-  /**
+/**
   * 生成用户资料卡下方的操作按钮（屏蔽/解禁/置顶）
   */
-  function getInfoCardButtons(userId, isBlocked) {
+function getInfoCardButtons(userId, isBlocked) {
     const blockAction = isBlocked ? "unblock" : "block";
-    const blockText = isBlocked ? "✅ 解除屏蔽 (Unblock)" : "🚫 屏蔽此人 (Block)";
+    const blockText = isBlocked ? "✅ 解除屏蔽" : "🚫 屏蔽此人";
     return {
         inline_keyboard: [
             [{ // Row 1: Block/Unblock Button
                 text: blockText,
                 callback_data: `${blockAction}:${userId}`
             }],
-            [{ // Row 2: Pin Button
-                text: "📌 置顶此消息 (Pin Card)",
+            // --- [ ⭐️ 新增按钮 ⭐️ ] ---
+            [{ // Row 2: View Profile Button (使用 url 属性)
+                text: "👤 查看用户资料",
+                url: `tg://user?id=${userId}` 
+            }],
+            // --- [ ⭐️ 新增结束 ⭐️ ] ---
+            [{ // Row 3: Pin Button (原 Row 2)
+                text: "📌 置顶此消息",
                 callback_data: `pin_card:${userId}` 
             }]
         ]
